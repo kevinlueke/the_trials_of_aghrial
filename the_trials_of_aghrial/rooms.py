@@ -316,24 +316,74 @@ class Village(InitialRoom):
 class VillageHomes(InitialRoom):
    def enter(self):
        print(dedent("""
-        To your right there is house labeled 'The Miller Residence'
-        To your left is a house labeled 'The Anderson Residence'
-        Straight ahead is an empty road that looks like it goes on for miles           
-        """))
+            To your right there is house labeled 'The Dempster Residence'
+            To your left is a house labeled 'The Higalra Residence'
+            Straight ahead is an empty road that looks like it goes on for miles           
+            """))
+       
+       action = self.dir(('h', 'j', 'k', 'l'))
+       
+       if action == 'h':
+           return 'higalra_residence_porch'
+       elif action == 'j':
+           return 'village'
+       elif action == 'k':
+           return 'roadmap'
+       elif action == 'l':
+           return 'dempster_residence_porch'
 
-     #   action = self.dir(('h', 'j', 'k', 'l'))
+class ResidencePorch(InitialRoom):
 
-      #  if action = 'h':
-       #     print(dedent("""
-        #    The Anderson Residence is locked however with a lockpick it may be picked
-         #   Please note that a lockpick can only be used once
-          #  By picking the lock there is a 30% chance you will get caught
-           # If you get caught, you lose the lockpick, 5 mp, and you will go to jail
-           # Do you pick the lock for -3 mp?
-           # #"""))
-           # action = self.dir(('yes', 'no'))
+    def enter(self, residence_name, residence_class):
+            self.residence_name = residence_name
+            self.residence_class = residence_class
+            print(dedent(f"""
+                The {self.residence_name} Residence is locked however with a lockpick it may be picked
+                Please note that there is only one lockpick and it can only be used once
+                By picking the lock there is a 30% chance you will get caught
+                If you get caught, you lose the lockpick, 5 mp, and you will go to jail
+                Do you attempt to pick the lock for -3 mp?
+                """))
+            action = self.dir(('yes', 'no'))
 
-#            if action == 'yes':
- #               return 'anderson_residence'
-  #          elif action == 'no'
-   #             print("\nWithout picking the lock there is nothing else to do here")
+            if action == 'yes':
+                player_stats.player.stats['pick_lock'] = True
+                player_stats.player.stats['morality_points'] -= 3
+                player_stats.player.stats['items'].remove('lockpick')
+                print(player_stats.player.stats)
+                
+                if randint(1, 101) >= 70:
+                    return self.residence_class
+                else:
+                    return 'jail'
+
+                
+            elif action == 'no':
+
+                print("\nWithout picking the lock there is nothing else to do here\n")
+                action = self.dir(('h', 'j', 'k', 'l'))
+
+                if action == 'j':
+                    return 'village_homes'
+
+
+
+class HigalraResidencePorch(ResidencePorch):
+    
+    def enter(self):
+        super(HigalraResidencePorch, self).enter('Higarla', 'higalra_residence')
+
+
+class DempsterResidencePorch(ResidencePorch):
+    
+    def enter(self):
+        super(DempsterResidencePorch, self).enter('Dempster', 'dempster_residence')
+
+class HigalraResidence(InitialRoom):
+    print("higarla")
+
+class DempsterResidence(InitialRoom):
+    print("dempster")
+
+class Jail(InitialRoom):
+    print("jail")

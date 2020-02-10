@@ -11,8 +11,14 @@ class Map(object):
             'cabin_bedroom': rooms.CabinBedroom(),
             'outside_cabin': rooms.OutsideCabin(),
             'river': rooms.River(),
+            'woods': rooms.Woods(),
             'village': rooms.Village(),
-            'woods': rooms.Woods()
+            'village_homes': rooms.VillageHomes(),
+            'higalra_residence_porch': rooms.HigalraResidencePorch(),
+            'dempster_residence_porch': rooms.DempsterResidencePorch(),
+            'higalra_residence': rooms.HigalraResidence(),
+            'dempster_residence': rooms.DempsterResidence(),
+            'jail': rooms.Jail()
             }
 
     def __init__(self, start_room):

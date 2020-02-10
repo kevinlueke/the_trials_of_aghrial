@@ -7,6 +7,7 @@ class Player(object):
             'drugs': False,
             'cleaned_room': False,
             'kid_drowning': False,
-            'cannibals': False
+            'cannibals': False,
+            'pick_lock': False
             }
 player = Player()
