@@ -8,6 +8,7 @@ class Player(object):
             'cleaned_room': False,
             'kid_drowning': False,
             'cannibals': False,
-            'pick_lock': False
+            'pick_lock': False,
+            'girl_on_path': False
             }
 player = Player()

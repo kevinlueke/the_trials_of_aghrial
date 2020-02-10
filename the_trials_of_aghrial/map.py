@@ -18,7 +18,9 @@ class Map(object):
             'dempster_residence_porch': rooms.DempsterResidencePorch(),
             'higalra_residence': rooms.HigalraResidence(),
             'dempster_residence': rooms.DempsterResidence(),
-            'jail': rooms.Jail()
+            'jail': rooms.Jail(),
+            'secret_path': rooms.SecretPath(),
+            'wiggols_village': rooms.WiggolsVillage()
             }
 
     def __init__(self, start_room):

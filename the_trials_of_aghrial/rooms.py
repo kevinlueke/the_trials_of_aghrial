@@ -215,12 +215,14 @@ class Woods(InitialRoom):
                 player_stats.player.stats['morality_points'] -= 5
                 print(dedent(f"""
                     You ate the meat and feel full
-                    They thank you for eating with them
-                    There is nothing else to do here
+                    They thank you for eating with them and show you a secret path to the right
                     """))
                 #Have path continue here later on instead of head back
-                action = self.dir(('j'))
-                if action == 'j':
+                action = self.dir(('j', 'l'))
+
+                if action == 'l':
+                    return 'secret_path'
+                elif action == 'j':
                     return 'outside_cabin'
 
             elif action == 'no':
@@ -231,13 +233,74 @@ class Woods(InitialRoom):
 
         print(dedent("""
             You come back to the cannibal tribe and say hello to your friends
-            The only direction to go is back
+            There is a path to your right
             """))
         #self.directions = ['j']
-        action = self.dir(('j',))
-
-        if action == 'j':
+        action = self.dir(('j', 'k'))
+        
+        if action == 'l':
+            return 'secret_path'
+        elif action == 'j':
             return 'outside_cabin'
+
+
+class SecretPath(InitialRoom):
+    
+    def enter(self):
+        if player_stats.player.stats['girl_on_path'] == False:
+            player_stats.player.stats['girl_on_path'] = True
+            print(dedent("""
+                Whle walking along the path you see a girl that has dropped some stuff on the ground
+                She hasn't noticed you yet but is about to look up at you
+                Do you run over there and steal whatever you can grab for -2 mp?
+                """))
+            action = self.dir(('yes', 'no'))
+            
+            if action == 'yes':
+                print(dedent("""
+                    Quickly you scurry over there and snatch piece of cloth that loooks like a map off the ground
+                    The girl screams a string of curse words at you
+                    If at any point you'd like to examine the map just type map
+                    You can either run ahead on the path or head back
+                    """))
+                action = self.dir(('k', 'j'))
+
+                if action == 'k':
+                    return 'wiggols_village'
+                if action == 'j':
+                    return 'woods'
+
+            elif action == 'no':
+                player_stats.player.stats['morality_points'] += 2
+                print(dedent("""
+                    As the girl looks up at you, you walk towards her
+                    You help her pick up all her stuff
+                    To thank you she gives you a map and tells you that A = 10
+                    You earned +3 mp for helping her
+                    If at any point you'd like to look at the map just type map
+                    The path continues ahead of you
+                    """))
+                action = self.dir(('k', 'j'))
+
+                if action == 'k':
+                    return 'wiggols_village'
+                elif action == 'j':
+                    return 'woods'
+                
+        return 'wiggols_village'
+
+
+
+
+class WiggolsVillage(InitialRoom):
+    
+    def enter(self):
+        print(dedent("""
+            You find your way into a place called Wiggols Village
+            There is a jobs board to your right
+            To your left appears to be an abandoned house
+            straight ahead will take you further into the village
+            """))
 
 
 class River(InitialRoom):
@@ -350,9 +413,9 @@ class ResidencePorch(InitialRoom):
                 player_stats.player.stats['pick_lock'] = True
                 player_stats.player.stats['morality_points'] -= 3
                 player_stats.player.stats['items'].remove('lockpick')
-                print(player_stats.player.stats)
                 
                 if randint(1, 101) >= 70:
+                    # x = ....
                     return self.residence_class
                 else:
                     return 'jail'
@@ -372,6 +435,7 @@ class HigalraResidencePorch(ResidencePorch):
     
     def enter(self):
         super(HigalraResidencePorch, self).enter('Higarla', 'higalra_residence')
+        # return x?
 
 
 class DempsterResidencePorch(ResidencePorch):
