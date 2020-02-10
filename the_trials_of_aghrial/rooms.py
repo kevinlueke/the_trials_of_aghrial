@@ -17,14 +17,14 @@ class InitialRoom(object):
                 print(dedent("""
                     ---------------------------------------
                     The directions to move are as follows:
-                    h will move left
-                    j will move back
-                    k will move forward
-                    l will move right
+                    w will move forward
+                    a will move left
+                    s will move back
+                    d will move right
                     ---------------------------------------
                     When presented with a choice to do something:
-                    yes will agree to something
-                    no will disagree to something
+                    yes or y will agree to something
+                    no or n will disagree to something
                     ---------------------------------------
                     mp will dislpay current score
                     map will show the map if you have it
@@ -61,14 +61,14 @@ class Introduction(InitialRoom):
             If you only choose choices of one side then the game will be imposiible to win
             ---------------------------------------
             The directions to move are as follows:
-            h will move left
-            j will move back
-            k will move forward
-            l will move right
+            w will move forward
+            a will move left
+            s will move back
+            d will move right
             ---------------------------------------
             When presented with a choice to do something:
-            yes will agree to something
-            no will disagree to something
+            yes or y will agree to something
+            no or n will disagree to something
             ---------------------------------------
             Typing mp will give you your current score
             
@@ -77,9 +77,9 @@ class Introduction(InitialRoom):
             
             There's a magical door right in front of you
             """))
-        action = self.dir(('k',))
+        action = self.dir(('w',))
 
-        if action == 'k':
+        if action == 'w':
             print("\nThe door you came out of slammed shut behind you and disappeared")
             return 'cabin_main_room'
 
@@ -93,14 +93,14 @@ class CabinMainRoom(InitialRoom):
             Behind you is a bedroom
             In front of you is a door to leave the cabin
             """))
-        #self.directions = ['k', 'l', 'j']
-        action = self.dir(('k', 'l', 'j'))
+        #self.directions = ['w', 'd', 's']
+        action = self.dir(('w', 'd', 's'))
 
-        if action == 'k':
+        if action == 'w':
             return 'outside_cabin'
-        elif action == 'l':
+        elif action == 'd':
             return 'cabin_bathroom'
-        elif action == 'j':
+        elif action == 's':
             return 'cabin_bedroom'
 
 
@@ -108,22 +108,22 @@ class CabinBathroom(InitialRoom):
     
     def enter(self):
         if player_stats.player.stats['drugs'] == False:
-            #self.directions = ['yes', 'no']
+            #self.directions = ['yes', 'y', 'no']
             print(dedent("""
                 There is a bottle of Xeron Elixir in the bathroom
                 The label is scraped off, you don't know what it'll do
                 Do you steal it for -5 mp?
                 """))
-            action = self.dir(('yes', 'no'))
+            action = self.dir(('yes', 'y', 'no', 'n'))
 
-            if action == 'yes':
+            if action == 'yes' or action == 'y':
                 player_stats.player.stats['drugs'] = True
                 player_stats.player.stats['morality_points'] -= 5
                 print(dedent(f"""
                     After taking the l your whole body feels amazing
                     """))
 
-            elif action == 'no':
+            elif action == 'no' or action == 'n':
                 print(dedent(f"""
                     You refrained from stealing drugs
                     """))
@@ -132,10 +132,10 @@ class CabinBathroom(InitialRoom):
             There is nothing else in the bathroom to use
             All you can do is head back
             """))
-        #self.directions = ['j']
-        action = self.dir(('j',))
+        #self.directions = ['s']
+        action = self.dir(('s',))
 
-        if action == 'j':
+        if action == 's':
             return 'cabin_main_room'
 
 
@@ -147,10 +147,10 @@ class CabinBedroom(InitialRoom):
                 The bedroom is messy
                 Do you clean it for +5 mp?
                 """))
-            #self.directions = ['yes', 'no']
-            action = self.dir(('yes', 'no'))
+            #self.directions = ['yes', 'y', 'no']
+            action = self.dir(('yes', 'y', 'no', 'n'))
 
-            if action == 'yes':
+            if action == 'yes' or action == 'y':
                 player_stats.player.stats['cleaned_room'] = True
                 player_stats.player.stats['morality_points'] += 3
 
@@ -158,16 +158,16 @@ class CabinBedroom(InitialRoom):
                     While cleaning the room you came upon a lockpick
                     Do you steal it for -5 mp?
                     """))
-                action = self.dir(('yes', 'no'))
-                if action == 'yes':
+                action = self.dir(('yes', 'y', 'no'))
+                if action == 'yes' or action == 'y':
                     player_stats.player.stats['morality_points'] -= 5
                     print("\nYou slide the lockpick into your pocket")
                     player_stats.player.stats['items'] = ['lockpick']
 
-                elif action == 'no':
+                elif action == 'no' or action == 'n':
                     print("\nThe lockpick is left where it is")
 
-            elif action == 'no':
+            elif action == 'no' or action == 'n':
                 player_stats.player.stats['morality_points'] -= 1
                 print(dedent(f"""
                     Ha!
@@ -176,10 +176,10 @@ class CabinBedroom(InitialRoom):
                     """))
 
         print("There is nothing else to do in the bedroom")
-        #self.directions = ['j']
-        action = self.dir(('j',))
+        #self.directions = ['s']
+        action = self.dir(('s',))
 
-        if action == 'j':
+        if action == 's':
             return 'cabin_main_room'
 
 
@@ -192,16 +192,16 @@ class OutsideCabin(InitialRoom):
             To your right is the woods
             Straight ahead is a village
              """))
-        #self.directions = ['h', 'j', 'k', 'l']
-        action = self.dir(('h', 'j', 'k', 'l'))
+        #self.directions = ['h', 's', 'w', 'd']
+        action = self.dir(('a', 's', 'w', 'd'))
 
-        if action == 'h':
+        if action == 'a':
             return 'river'
-        elif action == 'j':
+        elif action == 's':
             return 'cabin_main_room'
-        elif action == 'k':
+        elif action == 'w':
             return 'village'
-        elif action == 'l':
+        elif action == 'd':
             return 'woods'
 
 
@@ -215,10 +215,10 @@ class Woods(InitialRoom):
                 Rather than eat you they want to see if you'll eat human meat
                 Do you eat it for -5 mp?
                 """))
-            #self.directions = ['yes', 'no']
-            action = self.dir(('yes', 'no'))
+            #self.directions = ['yes', 'y', 'no']
+            action = self.dir(('yes', 'y', 'no', 'n'))
 
-            if action == 'yes':
+            if action == 'yes' or action == 'y':
                 player_stats.player.stats['cannibals'] = True
                 player_stats.player.stats['morality_points'] -= 5
                 print(dedent(f"""
@@ -226,14 +226,14 @@ class Woods(InitialRoom):
                     They thank you for eating with them and show you a secret path to the right
                     """))
                 #Have path continue here later on instead of head back
-                action = self.dir(('j', 'l'))
+                action = self.dir(('s', 'd'))
 
-                if action == 'l':
+                if action == 'd':
                     return 'secret_path'
-                elif action == 'j':
+                elif action == 's':
                     return 'outside_cabin'
 
-            elif action == 'no':
+            elif action == 'no' or action == 'n':
                 print(dedent("""
                     You screamed like a little girl and ran away from them
                     """))
@@ -243,12 +243,12 @@ class Woods(InitialRoom):
             You come back to the cannibal tribe and say hello to your friends
             There is a path to your right
             """))
-        #self.directions = ['j']
-        action = self.dir(('j', 'k'))
+        #self.directions = ['s']
+        action = self.dir(('s', 'w'))
         
-        if action == 'l':
+        if action == 'd':
             return 'secret_path'
-        elif action == 'j':
+        elif action == 's':
             return 'outside_cabin'
 
 
@@ -262,9 +262,9 @@ class SecretPath(InitialRoom):
                 She hasn't noticed you yet but is about to look up at you
                 Do you run over there and steal whatever you can grab for -2 mp?
                 """))
-            action = self.dir(('yes', 'no'))
+            action = self.dir(('yes', 'y', 'no', 'n'))
             
-            if action == 'yes':
+            if action == 'yes' or action == 'y':
                 player_stats.player.stats['morality_points'] -= 2
                 player_stats.player.stats['items'] = ['map']
 
@@ -274,14 +274,14 @@ class SecretPath(InitialRoom):
                     If at any point you'd like to examine the map just type map
                     You can either run ahead on the path or head back
                     """))
-                action = self.dir(('k', 'j'))
+                action = self.dir(('w', 's'))
 
-                if action == 'k':
+                if action == 'w':
                     return 'wiggols_village'
-                if action == 'j':
+                if action == 's':
                     return 'woods'
 
-            elif action == 'no':
+            elif action == 'no' or action == 'n':
                 player_stats.player.stats['morality_points'] += 2
                 player_stats.player.stats['items'] = ['map']
                 print(dedent("""
@@ -292,11 +292,11 @@ class SecretPath(InitialRoom):
                     If at any point you'd like to look at the map just type map
                     The path continues ahead of you
                     """))
-                action = self.dir(('k', 'j'))
+                action = self.dir(('w', 's'))
 
-                if action == 'k':
+                if action == 'w':
                     return 'wiggols_village'
-                elif action == 'j':
+                elif action == 's':
                     return 'woods'
                 
         return 'wiggols_village'
@@ -326,10 +326,10 @@ class River(InitialRoom):
                 Type yes to save the kid from drowning
                 Type no to pretend like you didn't see him and return to outside the cabin
                 """))
-            #self.directions = ['yes', 'no']
-            action = self.dir(('yes', 'no'))
+            #self.directions = ['yes', 'y', 'no']
+            action = self.dir(('yes', 'y', 'no', 'n'))
 
-            if action == 'yes':
+            if action == 'yes' or action == 'y':
                 player_stats.player.stats['kid_drowning'] = True
                 player_stats.player.stats['morality_points'] += 10
                 print(dedent(f"""
@@ -338,7 +338,7 @@ class River(InitialRoom):
                     He runs away thanking you
                     This gave you 10 mp
                     """))
-            elif action == 'no':
+            elif action == 'no' or action == 'n':
                 player_stats.player.stats['kid_drowning'] = True
                 player_stats.player.stats['morality_points'] -= 10
                 print(dedent(f"""
@@ -349,12 +349,12 @@ class River(InitialRoom):
                 return 'outside_cabin'
 
         print("You may follow the river upstream by going straight")
-        #self.directions = ['j']
-        action = self.dir(('j',))
+        #self.directions = ['s']
+        action = self.dir(('s',))
 
-        if action == 'k':
+        if action == 'w':
             return 'waterfall'
-        elif action == 'j':
+        elif action == 's':
             return 'outside_cabin'
 
 
@@ -366,21 +366,21 @@ class Waterfall(InitialRoom):
             There appears to be nowhere to go
             """))
         if 'map' not in (player_stats.player.stats['items']):
-            action = self.dir(('j',))
+            action = self.dir(('s',))
         else:
-            action = self.dir(('j', 'open sesame'))
+            action = self.dir(('s', 'open sesame'))
 
-        if action == 'j':
+        if action == 's':
             return 'river'
         elif 'map' in (player_stats.player.stats['items']) and action == 'open sesame':
             print(dedent("""
                 Straight ahead, behind the Waterfall you see a door screech open
                 """))
-            action = self.dir(('k', 'j'))
+            action = self.dir(('w', 's'))
 
-            if action == 'k':
+            if action == 'w':
                 return 'secret_room'
-            elif action == 'j':
+            elif action == 's':
                 return 'river'
 
 class SecretRoom(InitialRoom):
@@ -397,26 +397,26 @@ class Village(InitialRoom):
             To your right is an animal rescue center
             In front of you is more of the village
             """))
-        #self.directions = ['h', 'l', 'j', 'k']
-        action = self.dir(('h', 'l', 'j', 'k'))
+        #self.directions = ['a', 'd', 's', 'w']
+        action = self.dir(('a', 'd', 's', 'w'))
 
-        if action == 'h':
+        if action == 'a':
             print(dedent(f"""
                 Woah there sonny!
                 You need -50 mp to enter here
                 """))
             return 'village'
 
-        elif action == 'l':
+        elif action == 'd':
             print(dedent("""
                 You need 50 mp to enter here
                 """))
             return 'village'
 
-        elif action == 'k':
+        elif action == 'w':
             return 'village_homes'
 
-        elif action == 'j':
+        elif action == 's':
             return 'outside_cabin'
 
 
@@ -428,15 +428,15 @@ class VillageHomes(InitialRoom):
             Straight ahead is an empty road that looks like it goes on for miles           
             """))
        
-       action = self.dir(('h', 'j', 'k', 'l'))
+       action = self.dir(('a', 's', 'w', 'd'))
        
-       if action == 'h':
+       if action == 'a':
            return 'higalra_residence_porch'
-       elif action == 'j':
+       elif action == 's':
            return 'village'
-       elif action == 'k':
+       elif action == 'w':
            return 'roadmap'
-       elif action == 'l':
+       elif action == 'd':
            return 'dempster_residence_porch'
 
 class ResidencePorch(InitialRoom):
@@ -453,9 +453,9 @@ class ResidencePorch(InitialRoom):
                 If you get caught, you lose the lockpick, 5 mp, and you will go to jail
                 Do you attempt to pick the lock for -3 mp?
                 """))
-            action = self.dir(('yes', 'no'))
+            action = self.dir(('yes', 'y', 'no', 'n'))
 
-            if action == 'yes':
+            if action == 'yes' or action == 'y':
                 player_stats.player.stats['pick_lock'] = True
                 player_stats.player.stats['morality_points'] -= 3
                 if 'lockpick' in (player_stats.player.stats['items']):
@@ -468,12 +468,12 @@ class ResidencePorch(InitialRoom):
                     return 'jail'
 
                 
-            elif action == 'no':
+            elif action == 'no' or action == 'n':
 
                 print("\nWithout picking the lock there is nothing else to do here\n")
-                action = self.dir(('h', 'j', 'k', 'l'))
+                action = self.dir(('a', 's', 'w', 'd'))
 
-                if action == 'j':
+                if action == 's':
                     return 'village_homes'
 
 
