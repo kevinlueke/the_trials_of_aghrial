@@ -14,13 +14,15 @@ class Map(object):
             'woods': rooms.Woods(),
             'village': rooms.Village(),
             'village_homes': rooms.VillageHomes(),
-            'higalra_residence_porch': rooms.HigalraResidencePorch(),
-            'dempster_residence_porch': rooms.DempsterResidencePorch(),
+            'higalra_residence_porch': rooms.ResidencePorch('Higalra', 'higalra_residence'),
+            'dempster_residence_porch': rooms.ResidencePorch('Dempster', 'dempster_residence'),
             'higalra_residence': rooms.HigalraResidence(),
             'dempster_residence': rooms.DempsterResidence(),
             'jail': rooms.Jail(),
             'secret_path': rooms.SecretPath(),
-            'wiggols_village': rooms.WiggolsVillage()
+            'wiggols_village': rooms.WiggolsVillage(),
+            'waterfall': rooms.Waterfall(),
+            'secret_room': rooms.SecretRoom()
             }
 
     def __init__(self, start_room):

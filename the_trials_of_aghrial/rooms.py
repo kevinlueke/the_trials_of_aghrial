@@ -25,9 +25,17 @@ class InitialRoom(object):
                     When presented with a choice to do something:
                     yes will agree to something
                     no will disagree to something
-
+                    ---------------------------------------
                     mp will dislpay current score
+                    map will show the map if you have it
                     """))
+            elif action == 'map':
+                if 'map' in (player_stats.player.stats['items']):
+                    print(dedent("""
+                        32171423 1029 291714 321029142725102121 29342514 24251423 281428102224
+                        """))
+                else:
+                    print('no map')
             elif action == 'mp':
                 print(f"Your current mp is {player_stats.player.stats['morality_points']}")
 
@@ -257,6 +265,9 @@ class SecretPath(InitialRoom):
             action = self.dir(('yes', 'no'))
             
             if action == 'yes':
+                player_stats.player.stats['morality_points'] -= 2
+                player_stats.player.stats['items'] = ['map']
+
                 print(dedent("""
                     Quickly you scurry over there and snatch piece of cloth that loooks like a map off the ground
                     The girl screams a string of curse words at you
@@ -272,6 +283,7 @@ class SecretPath(InitialRoom):
 
             elif action == 'no':
                 player_stats.player.stats['morality_points'] += 2
+                player_stats.player.stats['items'] = ['map']
                 print(dedent("""
                     As the girl looks up at you, you walk towards her
                     You help her pick up all her stuff
@@ -336,12 +348,44 @@ class River(InitialRoom):
                     """))
                 return 'outside_cabin'
 
-        print("There is nothing to do here anymore")
+        print("You may follow the river upstream by going straight")
         #self.directions = ['j']
         action = self.dir(('j',))
 
-        if action == 'j':
+        if action == 'k':
+            return 'waterfall'
+        elif action == 'j':
             return 'outside_cabin'
+
+
+class Waterfall(InitialRoom):
+
+    def enter(self):
+        print(dedent("""
+            After following the river you come across a Waterfall
+            There appears to be nowhere to go
+            """))
+        if 'map' not in (player_stats.player.stats['items']):
+            action = self.dir(('j',))
+        else:
+            action = self.dir(('j', 'open sesame'))
+
+        if action == 'j':
+            return 'river'
+        elif 'map' in (player_stats.player.stats['items']) and action == 'open sesame':
+            print(dedent("""
+                Straight ahead, behind the Waterfall you see a door screech open
+                """))
+            action = self.dir(('k', 'j'))
+
+            if action == 'k':
+                return 'secret_room'
+            elif action == 'j':
+                return 'river'
+
+class SecretRoom(InitialRoom):
+    def enter(self):
+        print('not done')
 
 
 class Village(InitialRoom):
@@ -396,10 +440,12 @@ class VillageHomes(InitialRoom):
            return 'dempster_residence_porch'
 
 class ResidencePorch(InitialRoom):
-
-    def enter(self, residence_name, residence_class):
+    
+    def __init__(self, residence_name, residence_class):
             self.residence_name = residence_name
             self.residence_class = residence_class
+
+    def enter(self):
             print(dedent(f"""
                 The {self.residence_name} Residence is locked however with a lockpick it may be picked
                 Please note that there is only one lockpick and it can only be used once
@@ -412,7 +458,8 @@ class ResidencePorch(InitialRoom):
             if action == 'yes':
                 player_stats.player.stats['pick_lock'] = True
                 player_stats.player.stats['morality_points'] -= 3
-                player_stats.player.stats['items'].remove('lockpick')
+                if 'lockpick' in (player_stats.player.stats['items']):
+                    player_stats.player.stats['items'].remove('lockpick')
                 
                 if randint(1, 101) >= 70:
                     # x = ....
@@ -429,19 +476,6 @@ class ResidencePorch(InitialRoom):
                 if action == 'j':
                     return 'village_homes'
 
-
-
-class HigalraResidencePorch(ResidencePorch):
-    
-    def enter(self):
-        super(HigalraResidencePorch, self).enter('Higarla', 'higalra_residence')
-        # return x?
-
-
-class DempsterResidencePorch(ResidencePorch):
-    
-    def enter(self):
-        super(DempsterResidencePorch, self).enter('Dempster', 'dempster_residence')
 
 class HigalraResidence(InitialRoom):
     print("higarla")
