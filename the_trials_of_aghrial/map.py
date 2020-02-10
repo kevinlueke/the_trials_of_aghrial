@@ -20,7 +20,10 @@ class Map(object):
             'dempster_residence': rooms.DempsterResidence(),
             'jail': rooms.Jail(),
             'secret_path': rooms.SecretPath(),
-            'wiggols_village': rooms.WiggolsVillage(),
+            'south_wiggols_village': rooms.SouthWiggolsVillage(),
+            'north_wiggols_village': rooms.NorthWiggolsVillage(),
+            'wiggols_job_board': rooms.WiggolsJobBoard(),
+            'abandoned_house': rooms.AbandonedHouse(),
             'waterfall': rooms.Waterfall(),
             'secret_room': rooms.SecretRoom()
             }

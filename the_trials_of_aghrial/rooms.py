@@ -93,7 +93,6 @@ class CabinMainRoom(InitialRoom):
             Behind you is a bedroom
             In front of you is a door to leave the cabin
             """))
-        #self.directions = ['w', 'd', 's']
         action = self.dir(('w', 'd', 's'))
 
         if action == 'w':
@@ -108,7 +107,6 @@ class CabinBathroom(InitialRoom):
     
     def enter(self):
         if player_stats.player.stats['drugs'] == False:
-            #self.directions = ['yes', 'y', 'no']
             print(dedent("""
                 There is a bottle of Xeron Elixir in the bathroom
                 The label is scraped off, you don't know what it'll do
@@ -120,7 +118,7 @@ class CabinBathroom(InitialRoom):
                 player_stats.player.stats['drugs'] = True
                 player_stats.player.stats['morality_points'] -= 5
                 print(dedent(f"""
-                    After taking the l your whole body feels amazing
+                    After taking the elixir your whole body feels amazing
                     """))
 
             elif action == 'no' or action == 'n':
@@ -132,7 +130,6 @@ class CabinBathroom(InitialRoom):
             There is nothing else in the bathroom to use
             All you can do is head back
             """))
-        #self.directions = ['s']
         action = self.dir(('s',))
 
         if action == 's':
@@ -147,7 +144,6 @@ class CabinBedroom(InitialRoom):
                 The bedroom is messy
                 Do you clean it for +5 mp?
                 """))
-            #self.directions = ['yes', 'y', 'no']
             action = self.dir(('yes', 'y', 'no', 'n'))
 
             if action == 'yes' or action == 'y':
@@ -176,7 +172,6 @@ class CabinBedroom(InitialRoom):
                     """))
 
         print("There is nothing else to do in the bedroom")
-        #self.directions = ['s']
         action = self.dir(('s',))
 
         if action == 's':
@@ -192,7 +187,6 @@ class OutsideCabin(InitialRoom):
             To your right is the woods
             Straight ahead is a village
              """))
-        #self.directions = ['h', 's', 'w', 'd']
         action = self.dir(('a', 's', 'w', 'd'))
 
         if action == 'a':
@@ -215,7 +209,6 @@ class Woods(InitialRoom):
                 Rather than eat you they want to see if you'll eat human meat
                 Do you eat it for -5 mp?
                 """))
-            #self.directions = ['yes', 'y', 'no']
             action = self.dir(('yes', 'y', 'no', 'n'))
 
             if action == 'yes' or action == 'y':
@@ -225,7 +218,6 @@ class Woods(InitialRoom):
                     You ate the meat and feel full
                     They thank you for eating with them and show you a secret path to the right
                     """))
-                #Have path continue here later on instead of head back
                 action = self.dir(('s', 'd'))
 
                 if action == 'd':
@@ -243,8 +235,7 @@ class Woods(InitialRoom):
             You come back to the cannibal tribe and say hello to your friends
             There is a path to your right
             """))
-        #self.directions = ['s']
-        action = self.dir(('s', 'w'))
+        action = self.dir(('s', 'd'))
         
         if action == 'd':
             return 'secret_path'
@@ -277,7 +268,7 @@ class SecretPath(InitialRoom):
                 action = self.dir(('w', 's'))
 
                 if action == 'w':
-                    return 'wiggols_village'
+                    return 'south_wiggols_village'
                 if action == 's':
                     return 'woods'
 
@@ -288,31 +279,70 @@ class SecretPath(InitialRoom):
                     As the girl looks up at you, you walk towards her
                     You help her pick up all her stuff
                     To thank you she gives you a map and tells you that A = 10
-                    You earned +3 mp for helping her
+                    You earned +2 mp for helping her
                     If at any point you'd like to look at the map just type map
                     The path continues ahead of you
                     """))
                 action = self.dir(('w', 's'))
 
                 if action == 'w':
-                    return 'wiggols_village'
+                    return 'south_wiggols_village'
                 elif action == 's':
                     return 'woods'
                 
-        return 'wiggols_village'
+        return 'south_wiggols_village'
 
 
-
-
-class WiggolsVillage(InitialRoom):
+class SouthWiggolsVillage(InitialRoom):
     
     def enter(self):
         print(dedent("""
-            You find your way into a place called Wiggols Village
+            You are in South Wiggols Village
             There is a jobs board to your right
             To your left appears to be an abandoned house
             straight ahead will take you further into the village
             """))
+        action = self.dir(('w', 'a', 's', 'd'))
+        
+        if action == 'w':
+            return 'north_wiggols_village'
+        elif action == 'a':
+            return 'abandoned_house'
+        elif action == 'd':
+            return 'wiggols_job_board'
+        elif action == 's':
+            return 'woods'
+
+class AbandonedHouse(InitialRoom):
+
+    def enter(self):
+        print('Not done yet head back')
+        action = self.dir(('s'))
+        if action == 's':
+            return 'south_wiggols_village'
+
+
+class WiggolsJobBoard(InitialRoom):
+
+    def enter(self):
+        print('Not done yet, head back')
+        action = self.dir(('s',))
+        if action == 's':
+            return 'south_wiggols_village'
+
+
+class NorthWiggolsVillage(InitialRoom):
+
+    def enter(self):
+        print(dedent("""
+            You are in North Wiggols Village
+            Not finished yet
+            Head back
+            """))
+        action = self.dir(('s',))
+
+        if action == 's':
+            return 'south_wiggols_village'
 
 
 class River(InitialRoom):
