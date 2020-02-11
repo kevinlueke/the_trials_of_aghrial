@@ -15,8 +15,12 @@ class Map(object):
             'village': rooms.Village(),
             'village_homes': rooms.VillageHomes(),
             'higalra_residence_porch': rooms.ResidencePorch('Higalra', 'higalra_residence'),
-            'dempster_residence_porch': rooms.ResidencePorch('Dempster', 'dempster_residence'),
             'higalra_residence': rooms.HigalraResidence(),
+            'higalra_basement': rooms.HigalraBasement(),
+            'higalra_kitchen': rooms.HigalraKitchen(),
+            'higalra_bathroom': rooms.HigalraBathroom(),
+            'higalra_bedroom': rooms.HigalraBedroom(),
+            'dempster_residence_porch': rooms.ResidencePorch('Dempster', 'dempster_residence'),
             'dempster_residence': rooms.DempsterResidence(),
             'jail': rooms.Jail(),
             'secret_path': rooms.SecretPath(),
@@ -25,7 +29,8 @@ class Map(object):
             'wiggols_job_board': rooms.WiggolsJobBoard(),
             'abandoned_house': rooms.AbandonedHouse(),
             'waterfall': rooms.Waterfall(),
-            'secret_room': rooms.SecretRoom()
+            'secret_room': rooms.SecretRoom(),
+            'road_map': rooms.RoadMap()
             }
 
     def __init__(self, start_room):

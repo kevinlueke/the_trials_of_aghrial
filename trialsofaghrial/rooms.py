@@ -51,8 +51,9 @@ class Introduction(InitialRoom):
     def enter(self):
         print(dedent("""
             Welcome to The Trials of Aghrial
-            Aghrial stopped a murder from happening
-            Only days later the man that he saved killed hundreds
+            Years ago, Aghrial stopped a murder from happening
+            Only days after the man that he saved killed hundreds
+            After that tragic day Aghrial disappeared, leaving no trace of himself behind
             
             This game will allow you to choose between good and bad
             Sometimes chosing the wrong thing will lead to
@@ -353,8 +354,8 @@ class River(InitialRoom):
                 Upon approaching the river you see a kid drowning
                 He's screaming for help
                 You have two options
-                Type yes to save the kid from drowning
-                Type no to pretend like you didn't see him and return to outside the cabin
+                Type yes or y to save the kid from drowning
+                Type no or n to let him die
                 """))
             #self.directions = ['yes', 'y', 'no']
             action = self.dir(('yes', 'y', 'no', 'n'))
@@ -372,15 +373,13 @@ class River(InitialRoom):
                 player_stats.player.stats['kid_drowning'] = True
                 player_stats.player.stats['morality_points'] -= 10
                 print(dedent(f"""
-                    You casually just turn around and walk back to outside the cabin
-                    After a little while the kid stops screaming for help
-                    Shockingly you lose 10 mp
+                    You stand there and wait till the kid dies
+                    After a little while the kid stops screaming for help and floats downstream
+                    Shockingly, you lose 10 mp
                     """))
-                return 'outside_cabin'
 
-        print("You may follow the river upstream by going straight")
-        #self.directions = ['s']
-        action = self.dir(('s',))
+        print("\nYou may follow the river upstream by going straight\n")
+        action = self.dir(('s', 'w'))
 
         if action == 'w':
             return 'waterfall'
@@ -415,7 +414,11 @@ class Waterfall(InitialRoom):
 
 class SecretRoom(InitialRoom):
     def enter(self):
-        print('not done')
+        print('not done, head back')
+        #door shuts after you leave
+        action = self.dir(('s',))
+        if action == 's':
+            return 'waterfall'
 
 
 class Village(InitialRoom):
@@ -465,7 +468,7 @@ class VillageHomes(InitialRoom):
        elif action == 's':
            return 'village'
        elif action == 'w':
-           return 'roadmap'
+           return 'road_map'
        elif action == 'd':
            return 'dempster_residence_porch'
 
@@ -484,34 +487,144 @@ class ResidencePorch(InitialRoom):
                 Do you attempt to pick the lock for -3 mp?
                 """))
             action = self.dir(('yes', 'y', 'no', 'n'))
+            if 'lockpick' in player_stats.player.stats['items']:
+                if action == 'yes' or action == 'y':
+                    player_stats.player.stats['pick_lock'] = True
+                    player_stats.player.stats['morality_points'] -= 3
+                    if 'lockpick' in (player_stats.player.stats['items']):
+                        player_stats.player.stats['items'].remove('lockpick')
+                    
+                    if randint(1, 101) >= 70:
+                        # x = ....
+                        return self.residence_class
+                    else:
+                        return 'jail'
 
-            if action == 'yes' or action == 'y':
-                player_stats.player.stats['pick_lock'] = True
-                player_stats.player.stats['morality_points'] -= 3
-                if 'lockpick' in (player_stats.player.stats['items']):
-                    player_stats.player.stats['items'].remove('lockpick')
-                
-                if randint(1, 101) >= 70:
-                    # x = ....
-                    return self.residence_class
-                else:
-                    return 'jail'
+                    
+                elif action == 'no' or action == 'n':
 
-                
-            elif action == 'no' or action == 'n':
+                    print("\nWithout picking the lock there is nothing else to do here\n")
+                    action = self.dir(('a', 's', 'w', 'd'))
 
-                print("\nWithout picking the lock there is nothing else to do here\n")
-                action = self.dir(('a', 's', 'w', 'd'))
-
+                    if action == 's':
+                        return 'village_homes'
+            else:
+                print(dedent("""
+                    You currently do not have the lockpick so all you can do is head back
+                    """))
+                action = self.dir(('s',))
                 if action == 's':
                     return 'village_homes'
 
 
 class HigalraResidence(InitialRoom):
-    print("higarla")
+    
+    def enter(self):
+        print(dedent("""
+            You are in the living room of the Higalra Residence
+            There is a bedroom straight ahead
+            There is a kitchen to your left
+            """))
+        action = self.dir(('w', 'a', 's', 'aghrial', 'Agrhial'))
+
+        if action == 'w':
+            return 'higalra_bedroom'
+        elif action == 'a':
+            return 'higalra_bathroom'
+        elif action == 's':
+            return 'higalra_residence_porch'
+
+        if action == 'aghrial' or action == 'Aghrial':
+            print(dedent("""
+                A bookshelf creaks open as you utter the words
+                To your right there is now a staircase leading down
+                """))
+            action = self.dir(('d', 's'))
+
+            if action == 'd':
+                return 'higalra_basement'
+            elif action == 's':
+                return 'higalra_residence_porch'
+
+
+class HigalraBasement(InitialRoom):
+
+    def enter(self):
+        print(dedent("""
+            After walking down the stairs it is pitch black
+            You fumble around until you find a lightswitch
+            After turning it on you see not sure yet
+            Go back upstairs
+            """))
+        action = self.dir(('s',))
+        if action == 's':
+            print(dedent("""
+                The door slams shut behind you as you return to the living room
+                """))
+            return 'higalra_residence'
+
+
+class HigalraBedroom(InitialRoom):
+
+    def enter(self):
+        print(dedent("""
+            In the bedroom there is a note that says
+            ------------------------------------------------------------------
+            If you are reading this it means I am dead
+            I can only hope that you will continue my good work
+            Everything I did was for the greater good
+            Reveal my true name in the living room and it will all make sense
+            ------------------------------------------------------------------
+            Aside from the note, The rest of the bedroom is very empty and clean
+            
+            There is a bathroom to your left
+            """))
+
+        action = self.dir(('s', 'a'))
+
+        if action == 's':
+            return 'higalra_residence'
+        elif action == 'a':
+            return 'higalra_bathroom'
+
+
+class HigalraBathroom(InitialRoom):
+
+    def enter(self):
+        print("not done yet head back")
+        action = self.dir(('s',))
+        if action == 's':
+            return 'higalra_bedroom'
+
+
+class HigalraKitchen(InitialRoom):
+
+    def enter(self):
+        print('Not done yet, go back')
+        action = self.dir(('s',))
+        if action == 's':
+            return 'higalra_residence'
 
 class DempsterResidence(InitialRoom):
-    print("dempster")
+
+    def enter(self):
+        print("Not done yet, leave")
+        action = self.dir(('s',))
+        if action == 's':
+            return 'dempster_residence_porch'
 
 class Jail(InitialRoom):
-    print("jail")
+    def enter(self):
+        print("jail not done yet head back to village")
+        action = self.dir(('s',))
+        if action == 's':
+            return 'village_homes'
+
+
+class RoadMap(InitialRoom):
+    
+    def enter(self):
+        print('not done yet head back')
+        action = self.dir(('s',))
+        if action == 's':
+            return 'village_homes'

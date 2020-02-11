@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 
 setuptools.setup(
-    name="the_trials_of_aghrial"
+    name="trialsofaghrial"
     version="0.0.1",
     author="Kevin Lueke",
     author_email="your@email.com",
