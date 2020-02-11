@@ -1,5 +1,0 @@
-import the_trials_of_aghrial
-
-def test_import():
-    assert the_trials_of_aghrial
-
